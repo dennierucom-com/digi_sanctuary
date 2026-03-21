@@ -12,9 +12,9 @@ const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#9373B5',        // Lavender 40
-      light: '#C4B5E0',       // Lavender 80
-      dark: '#6A4C93',        // Lavender 30
+      main: '#4006BC',        // Brand Purple
+      light: '#7242E8',       
+      dark: '#2A0082',        
       contrastText: '#FFFFFF',
     },
     secondary: {
@@ -76,10 +76,11 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 24,
-          boxShadow: '0px 2px 8px rgba(29, 26, 37, 0.08)',
+          backgroundColor: '#FFFFFF',
+          boxShadow: '0px 4px 24px rgba(0, 0, 0, 0.05)',
           transition: 'box-shadow 0.3s ease, transform 0.2s ease',
           '&:hover': {
-            boxShadow: '0px 4px 16px rgba(29, 26, 37, 0.12)',
+            boxShadow: '0px 8px 32px rgba(0, 0, 0, 0.08)',
             transform: 'translateY(-2px)',
           },
         },
