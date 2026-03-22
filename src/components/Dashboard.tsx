@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Box, Typography, Grid, Container } from "@mui/material";
+import { Box, Typography, Stack, Container } from "@mui/material";
 import { useDashboardStore } from "@/store";
 import { WIDGET_REGISTRY, APP_STRINGS } from "@/constants";
 import { BaseCard } from "./common";
@@ -35,12 +35,12 @@ export const Dashboard: React.FC = () => {
         {APP_STRINGS.TAGLINE}
       </Typography>
 
-      <Grid container spacing={4} justifyContent="center">
+      <Stack spacing={2} sx={{ width: "100%", maxWidth: 800, mx: "auto" }}>
         {activeWidgets.map((widget) => {
           const WidgetComponent = React.lazy(widget.component);
 
           return (
-            <Grid item xs={12} md={6} key={widget.id}>
+            <Box key={widget.id}>
               <Suspense
                 fallback={
                   <BaseCard
@@ -57,16 +57,12 @@ export const Dashboard: React.FC = () => {
                   </BaseCard>
                 }
               >
-                {/* 
-                  The generic dashboard container wraps each dynamic widget 
-                  The widget manages its own state and settings through its config
-                */}
                 <WidgetComponent />
               </Suspense>
-            </Grid>
+            </Box>
           );
         })}
-      </Grid>
+      </Stack>
     </Container>
   );
 };

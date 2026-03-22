@@ -3,6 +3,7 @@ import { Box, Typography, IconButton } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import SettingsIcon from "@mui/icons-material/Settings";
+import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
 import { BaseCard } from "@/components/common";
 import { SettingsStepper } from "@/components/SettingsStepper";
 import { useBreathingCycle, BreathingPattern } from "./hooks";
@@ -15,10 +16,10 @@ export const BreathingTool: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
 
   const settings = useDashboardStore(
-    (state) => state.widgetSettings[WIDGET_IDS.BREATHING_TOOL] || {},
+    (state) => state.widgetSettings[WIDGET_IDS.BREATHING_TOOL] || {}
   );
   const updateSettings = useDashboardStore(
-    (state) => state.updateWidgetSettings,
+    (state) => state.updateWidgetSettings
   );
 
   const { phase, timeLeft, progress } = useBreathingCycle({
@@ -34,9 +35,9 @@ export const BreathingTool: React.FC = () => {
 
   const getVisualScale = () => {
     if (!isActive) return 1;
-    if (phase === "inhale") return 1 + progress * 0.5; // grows from 1 to 1.5
-    if (phase === "exhale") return 1.5 - progress * 0.5; // shrinks from 1.5 to 1
-    if (phase === "hold-in") return 1.5;
+    if (phase === "inhale") return 1 + progress * 0.3; // grows from 1 to 1.3
+    if (phase === "exhale") return 1.3 - progress * 0.3; // shrinks from 1.3 to 1
+    if (phase === "hold-in") return 1.3;
     return 1;
   };
 
@@ -50,6 +51,8 @@ export const BreathingTool: React.FC = () => {
   return (
     <BaseCard
       title="Breathing Tool"
+      description="Guided breathing exercises to help you relax and focus. Select your preferred breathing pattern and follow along."
+      icon={<SelfImprovementIcon />}
       action={
         <IconButton
           onClick={() => setShowSettings(!showSettings)}
@@ -67,60 +70,63 @@ export const BreathingTool: React.FC = () => {
       ) : (
         <Box
           sx={{
+            backgroundColor: "#F9FAF9",
+            borderLeft: "4px solid #6B9E6B", // Secondary accent color for differentiation
+            borderRadius: 2,
+            p: 2.5,
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            py: 4,
+            flexDirection: { xs: "column", sm: "row" },
+            alignItems: { xs: "flex-start", sm: "center" },
+            justifyContent: "space-between",
+            gap: 2,
+            mt: 1,
           }}
         >
-          <Box
-            sx={{
-              width: 150,
-              height: 150,
-              borderRadius: settings.visualStyle === "square" ? "16px" : "50%",
-              backgroundColor: "primary.light",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transform: `scale(${getVisualScale()})`,
-              transition: "transform 0.1s linear, border-radius 0.3s ease",
-              boxShadow: "0 8px 32px rgba(196, 181, 224, 0.4)",
-              mb: 6,
-            }}
-          >
-            <Typography
-              variant="h3"
-              color="primary.contrastText"
-              sx={{ zIndex: 1 }}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
+            <Box
+              sx={{
+                width: 64,
+                height: 64,
+                borderRadius: settings.visualStyle === "square" ? "12px" : "50%",
+                backgroundColor: "secondary.light",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transform: `scale(${getVisualScale()})`,
+                transition: "transform 0.1s linear, border-radius 0.3s ease",
+                boxShadow: "0 4px 12px rgba(107, 158, 107, 0.4)",
+              }}
             >
-              {isActive ? Math.ceil(timeLeft) : "---"}
-            </Typography>
+              <Typography
+                variant="h6"
+                color="secondary.contrastText"
+                sx={{ zIndex: 1, fontWeight: "bold" }}
+              >
+                {isActive ? Math.ceil(timeLeft) : "---"}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
+                {getPhaseText()}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {`${settings.pattern || "4-7-8"} Pattern`}
+              </Typography>
+            </Box>
           </Box>
-
-          <Typography variant="h5" color="text.secondary" gutterBottom>
-            {getPhaseText()}
-          </Typography>
-
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Pattern: {settings.pattern || "4-7-8"}
-          </Typography>
 
           <IconButton
             onClick={() => setIsActive(!isActive)}
-            color="primary"
             sx={{
-              width: 64,
-              height: 64,
-              backgroundColor: "primary.main",
+              width: 56,
+              height: 56,
+              backgroundColor: "secondary.main",
               color: "white",
-              "&:hover": { backgroundColor: "primary.dark" },
+              "&:hover": { backgroundColor: "secondary.dark" },
+              alignSelf: { xs: "flex-end", sm: "auto" },
             }}
           >
-            {isActive ? (
-              <PauseIcon fontSize="large" />
-            ) : (
-              <PlayArrowIcon fontSize="large" />
-            )}
+            {isActive ? <PauseIcon fontSize="medium" /> : <PlayArrowIcon fontSize="medium" />}
           </IconButton>
         </Box>
       )}
