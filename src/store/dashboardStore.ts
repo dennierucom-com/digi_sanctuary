@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { WIDGET_IDS, DEFAULT_WIDGET_ORDER, DEFAULT_WIDGET_SETTINGS } from '@/constants';
+import { DEFAULT_WIDGET_ORDER, DEFAULT_WIDGET_SETTINGS } from '@/constants';
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -71,6 +71,25 @@ export const useDashboardStore = create<DashboardState>()(
     }),
     {
       name: 'digi-sanctuary-dashboard',
+      merge: (persisted, current) => {
+        const stored = persisted as DashboardState | undefined;
+        if (!stored) return current;
+
+        // Inject any newly-registered widget IDs that are missing from the persisted order
+        const missingWidgets = DEFAULT_WIDGET_ORDER.filter(
+          (id) => !stored.widgetOrder.includes(id),
+        );
+
+        return {
+          ...current,
+          ...stored,
+          widgetOrder: [...stored.widgetOrder, ...missingWidgets],
+          widgetSettings: {
+            ...DEFAULT_WIDGET_SETTINGS,
+            ...stored.widgetSettings,
+          },
+        };
+      },
     },
   ),
 );
