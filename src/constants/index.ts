@@ -7,6 +7,7 @@ import type { ComponentType } from 'react';
 export const WIDGET_IDS = {
   BREATHING_TOOL: 'breathing-tool',
   AMBIENT_NOISE: 'ambient-noise',
+  SMART_HYDRATION: 'smart-hydration',
 } as const;
 
 export type WidgetId = (typeof WIDGET_IDS)[keyof typeof WIDGET_IDS];
@@ -43,6 +44,12 @@ export const WIDGET_REGISTRY: WidgetRegistryEntry[] = [
     description: 'Relaxing ambient soundscapes to help you focus',
     component: () => import('@/features/AmbientNoise'),
   },
+  {
+    id: WIDGET_IDS.SMART_HYDRATION,
+    title: 'Smart Hydration',
+    description: 'Personalized hydration tracking with medical-grade calculations',
+    component: () => import('@/features/SmartHydration'),
+  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -52,6 +59,7 @@ export const WIDGET_REGISTRY: WidgetRegistryEntry[] = [
 export const DEFAULT_WIDGET_ORDER: string[] = [
   WIDGET_IDS.BREATHING_TOOL,
   WIDGET_IDS.AMBIENT_NOISE,
+  WIDGET_IDS.SMART_HYDRATION,
 ];
 
 export const DEFAULT_WIDGET_SETTINGS: Record<string, Record<string, unknown>> = {
@@ -63,6 +71,18 @@ export const DEFAULT_WIDGET_SETTINGS: Record<string, Record<string, unknown>> = 
   [WIDGET_IDS.AMBIENT_NOISE]: {
     activeSound: 'rain',
     volume: 0.5,
+  },
+  [WIDGET_IDS.SMART_HYDRATION]: {
+    profile: {
+      weightKg: 70,
+      bodyComposition: 'average',
+      enableAltitude: true,
+      isPregnant: false,
+      isBreastfeeding: false,
+      chronicConditions: [],
+    },
+    logs: [],
+    lastActiveDate: '',
   },
 };
 
