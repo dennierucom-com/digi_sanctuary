@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import { Box, Typography, Stack, Container } from "@mui/material";
 import { useDashboardStore } from "@/store";
 import { WIDGET_REGISTRY, APP_STRINGS } from "@/constants";
-import { BaseCard } from "./common";
+import { BaseCard, ThemeToggle } from "./common";
 
 export const Dashboard: React.FC = () => {
   const widgetOrder = useDashboardStore((state) => state.widgetOrder);
@@ -14,12 +14,15 @@ export const Dashboard: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: -4, position: 'relative', zIndex: 1 }}>
+        <ThemeToggle />
+      </Box>
       <Typography
         variant="h2"
         component="h1"
         gutterBottom
         align="center"
-        color="primary.dark"
+        color="primary"
         sx={{ mb: 1 }}
       >
         {APP_STRINGS.APP_NAME}

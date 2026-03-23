@@ -32,9 +32,9 @@ function getProfile(settings: Record<string, unknown>): HealthProfile {
 }
 
 const switchSx = {
-  "& .MuiSwitch-switchBase.Mui-checked": { color: "#4006BC" },
+  "& .MuiSwitch-switchBase.Mui-checked": { color: "primary.main" },
   "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-    backgroundColor: "#4006BC",
+    backgroundColor: "primary.main",
   },
 };
 
@@ -62,7 +62,7 @@ export const useHydrationStepperList = ({
       content: (
         <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 3 }}>
           <Box>
-            <Typography variant="body2" color="#666666" gutterBottom>
+            <Typography variant="body2" color="text.secondary" gutterBottom>
               Body Weight: <strong>{profile.weightKg} kg</strong>
             </Typography>
             <Slider
@@ -72,7 +72,7 @@ export const useHydrationStepperList = ({
               step={1}
               onChange={(_, val) => updateProfile({ weightKg: val as number })}
               valueLabelDisplay="auto"
-              sx={{ color: "#4006BC" }}
+              sx={{ color: "primary.main" }}
             />
           </Box>
 
@@ -114,7 +114,7 @@ export const useHydrationStepperList = ({
               />
             }
             label={
-              <Typography variant="body2" color="#666666">
+              <Typography variant="body2" color="text.secondary">
                 High Altitude / Low Humidity (+20%)
               </Typography>
             }
@@ -141,7 +141,7 @@ export const useHydrationStepperList = ({
               />
             }
             label={
-              <Typography variant="body2" color="#666666">
+              <Typography variant="body2" color="text.secondary">
                 Pregnancy (+300 ml)
               </Typography>
             }
@@ -156,7 +156,7 @@ export const useHydrationStepperList = ({
               />
             }
             label={
-              <Typography variant="body2" color="#666666">
+              <Typography variant="body2" color="text.secondary">
                 Breastfeeding (+750 ml)
               </Typography>
             }
@@ -168,7 +168,7 @@ export const useHydrationStepperList = ({
       label: "Conditions",
       content: (
         <Box sx={{ mt: 2 }}>
-          <Typography variant="body2" color="#666666" gutterBottom>
+          <Typography variant="body2" color="text.secondary" gutterBottom>
             Select any chronic conditions that apply. Your daily goal and
             available options will adjust automatically.
           </Typography>
@@ -194,11 +194,11 @@ export const useHydrationStepperList = ({
                   variant={active ? "filled" : "outlined"}
                   onClick={() => toggleCondition(key)}
                   sx={{
-                    borderColor: "#4006BC",
+                    borderColor: "primary.main",
                     ...(active && {
-                      backgroundColor: "#4006BC",
-                      color: "#fff",
-                      "&:hover": { backgroundColor: "#2A0082" },
+                      backgroundColor: "primary.main",
+                      color: "primary.contrastText",
+                      "&:hover": { backgroundColor: "primary.dark" },
                     }),
                   }}
                 />

@@ -35,11 +35,12 @@ export const BaseCard: React.FC<BaseCardProps> = ({
                   width: 48,
                   height: 48,
                   borderRadius: "50%",
-                  border: "1px solid #4006BC",
+                  border: 1,
+                  borderColor: "primary.main",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "#4006BC",
+                  color: "primary.main",
                 }}
               >
                 {icon}
@@ -47,14 +48,14 @@ export const BaseCard: React.FC<BaseCardProps> = ({
             )}
             <Box>
               {typeof title === "string" ? (
-                <Typography variant="h6" component="h2" sx={{ fontWeight: "bold", color: "#1A1A1A" }}>
+                <Typography variant="h6" component="h2" sx={{ fontWeight: "bold", color: "text.primary" }}>
                   {title}
                 </Typography>
               ) : (
                 title
               )}
               {description && (
-                <Typography variant="body2" sx={{ color: "#666666", mt: 1 }}>
+                <Typography variant="body2" sx={{ color: "text.secondary", mt: 1 }}>
                   {description}
                 </Typography>
               )}

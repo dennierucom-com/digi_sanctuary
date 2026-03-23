@@ -70,8 +70,9 @@ export const BreathingTool: React.FC = () => {
       ) : (
         <Box
           sx={{
-            backgroundColor: "#F9FAF9",
-            borderLeft: "4px solid #6B9E6B", // Secondary accent color for differentiation
+            backgroundColor: "action.hover",
+            borderLeft: 4,
+            borderColor: "secondary.main", // Secondary accent color for differentiation
             borderRadius: 2,
             p: 2.5,
             display: "flex",

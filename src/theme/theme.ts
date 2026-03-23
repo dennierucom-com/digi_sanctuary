@@ -9,34 +9,76 @@ import { typography } from './typography';
  * Surface:   Warm near-white tones
  */
 const theme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#4006BC',        // Brand Purple
-      light: '#7242E8',       
-      dark: '#2A0082',        
-      contrastText: '#FFFFFF',
+  cssVariables: {
+    colorSchemeSelector: 'class',
+  },
+  colorSchemes: {
+    light: {
+      palette: {
+        primary: {
+          main: '#4006BC',        // Brand Purple
+          light: '#7242E8',       
+          dark: '#2A0082',        
+          contrastText: '#FFFFFF',
+        },
+        secondary: {
+          main: '#6B9E6B',        // Sage 40
+          light: '#A8C4A2',       // Sage 80
+          dark: '#4A7A4A',        // Sage 30
+          contrastText: '#FFFFFF',
+        },
+        error: {
+          main: '#BA1A1A',
+          light: '#FFDAD6',
+          dark: '#93000A',
+        },
+        background: {
+          default: '#FAF8FF',     // Surface
+          paper: '#FFFFFF',       // Card background in light mode
+        },
+        text: {
+          primary: '#1D1A25',     // On Surface
+          secondary: '#49454F',   // On Surface Variant
+        },
+        divider: 'rgba(29, 26, 37, 0.12)',
+        action: {
+          hover: 'rgba(64, 6, 188, 0.04)',
+        },
+      },
     },
-    secondary: {
-      main: '#6B9E6B',        // Sage 40
-      light: '#A8C4A2',       // Sage 80
-      dark: '#4A7A4A',        // Sage 30
-      contrastText: '#FFFFFF',
+    dark: {
+      palette: {
+        primary: {
+          main: '#C09CFF',        // Lighter Purple for dark mode
+          light: '#E6D4FF',       
+          dark: '#8C6CFA',        
+          contrastText: '#1D1A25',
+        },
+        secondary: {
+          main: '#A8C4A2',        // Sage 80
+          light: '#D3E8CD',       
+          dark: '#6B9E6B',        
+          contrastText: '#1D1A25',
+        },
+        error: {
+          main: '#FFB4AB',
+          light: '#FFDAD6',
+          dark: '#93000A',
+        },
+        background: {
+          default: '#141218',     // True Dark Surface
+          paper: '#211F26',       // Elevated surface
+        },
+        text: {
+          primary: '#E6E1E5',     // Light text on dark
+          secondary: '#CAC4D0',   // Muted light text
+        },
+        divider: 'rgba(230, 225, 229, 0.12)',
+        action: {
+          hover: 'rgba(192, 156, 255, 0.08)',
+        },
+      },
     },
-    error: {
-      main: '#BA1A1A',
-      light: '#FFDAD6',
-      dark: '#93000A',
-    },
-    background: {
-      default: '#FAF8FF',     // Surface
-      paper: '#F3EFF9',       // Surface Container Low
-    },
-    text: {
-      primary: '#1D1A25',     // On Surface
-      secondary: '#49454F',   // On Surface Variant
-    },
-    divider: 'rgba(29, 26, 37, 0.12)',
   },
   shape: {
     borderRadius: 16,          // M3 medium rounding

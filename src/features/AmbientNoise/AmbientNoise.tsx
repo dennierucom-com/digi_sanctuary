@@ -62,8 +62,9 @@ export const AmbientNoise: React.FC = () => {
       ) : (
         <Box
           sx={{
-            backgroundColor: "#F9FAF9",
-            borderLeft: "4px solid #4006BC", // Primary accent color
+            backgroundColor: "action.hover",
+            borderLeft: 4,
+            borderColor: "primary.main", // Primary accent color
             borderRadius: 2,
             p: 2.5,
             display: "flex",

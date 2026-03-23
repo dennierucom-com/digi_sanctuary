@@ -59,7 +59,7 @@ const ProgressRing: React.FC<{
         size={140}
         thickness={4}
         sx={{
-          color: '#4006BC',
+          color: 'primary.main',
           position: 'absolute',
           left: 0,
           '& .MuiCircularProgress-circle': {
@@ -78,10 +78,10 @@ const ProgressRing: React.FC<{
           justifyContent: 'center',
         }}
       >
-        <Typography variant="h5" fontWeight="bold" color="#1A1A1A">
+        <Typography variant="h5" fontWeight="bold" color="text.primary">
           {effectiveMl}
         </Typography>
-        <Typography variant="caption" color="#666666">
+        <Typography variant="caption" color="text.secondary">
           / {goalMl} ml
         </Typography>
       </Box>
@@ -156,16 +156,17 @@ const HydrationWidget: React.FC = () => {
           {/* ── Quick Log Action Card ────────────────────── */}
           <Box
             sx={{
-              backgroundColor: '#F9FAF9',
-              borderLeft: '4px solid #4006BC',
+              backgroundColor: 'action.hover',
+              borderLeft: 4,
+              borderColor: 'primary.main',
               borderRadius: 2,
               p: 2.5,
               mt: 2,
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-              <AddIcon sx={{ color: '#4006BC', fontSize: 20 }} />
-              <Typography variant="subtitle2" fontWeight="bold" color="#1A1A1A">
+              <AddIcon sx={{ color: 'primary.main', fontSize: 20 }} />
+              <Typography variant="subtitle2" fontWeight="bold" color="text.primary">
                 Quick Log
               </Typography>
             </Box>
@@ -178,14 +179,14 @@ const HydrationWidget: React.FC = () => {
                   size="small"
                   onClick={() => logIntake(p.value, effectiveAdditives)}
                   sx={{
-                    borderColor: '#4006BC',
-                    color: '#4006BC',
+                    borderColor: 'primary.main',
+                    color: 'primary.main',
                     borderRadius: 3,
                     textTransform: 'none',
                     fontWeight: 600,
                     '&:hover': {
-                      backgroundColor: 'rgba(64, 6, 188, 0.06)',
-                      borderColor: '#4006BC',
+                      backgroundColor: 'action.hover',
+                      borderColor: 'primary.main',
                     },
                   }}
                 >
@@ -196,7 +197,7 @@ const HydrationWidget: React.FC = () => {
 
             {/* Additives toggle */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <ScienceIcon sx={{ color: '#666666', fontSize: 18 }} />
+              <ScienceIcon sx={{ color: 'text.secondary', fontSize: 18 }} />
               <FormControlLabel
                 control={
                   <Switch
@@ -205,15 +206,15 @@ const HydrationWidget: React.FC = () => {
                     onChange={(_, val) => setAdditivesOn(val)}
                     disabled={isSodiumWarning}
                     sx={{
-                      '& .MuiSwitch-switchBase.Mui-checked': { color: '#4006BC' },
+                      '& .MuiSwitch-switchBase.Mui-checked': { color: 'primary.main' },
                       '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                        backgroundColor: '#4006BC',
+                        backgroundColor: 'primary.main',
                       },
                     }}
                   />
                 }
                 label={
-                  <Typography variant="body2" color="#666666">
+                  <Typography variant="body2" color="text.secondary">
                     Natural Additives (Salt + Lemon) — +20% absorption
                   </Typography>
                 }
