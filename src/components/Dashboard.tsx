@@ -8,17 +8,42 @@ import {
   Button,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import { useDashboardStore } from "@/store";
+import { WidgetContext } from "@/contexts/WidgetContext";
 import { WIDGET_REGISTRY, APP_STRINGS } from "@/constants";
 import { BaseCard } from "./common";
 
 export const Dashboard: React.FC = () => {
   const widgetOrder = useDashboardStore((state) => state.widgetOrder);
+  const expandedWidgetId = useDashboardStore((state) => state.expandedWidgetId);
+  const setExpandedWidget = useDashboardStore(
+    (state) => state.setExpandedWidget,
+  );
+
+  // Manage body scroll and Escape key logic
+  React.useEffect(() => {
+    if (expandedWidgetId) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && expandedWidgetId) {
+        setExpandedWidget(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "unset";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [expandedWidgetId, setExpandedWidget]);
 
   // Filter registry based on user's active set
   const activeWidgets = widgetOrder
@@ -83,7 +108,10 @@ export const Dashboard: React.FC = () => {
               }}
             >
               {item.icon}
-              <Box component="span" sx={{ display: { xs: "none", md: "inline" }, ml: 1 }}>
+              <Box
+                component="span"
+                sx={{ display: { xs: "none", md: "inline" }, ml: 1 }}
+              >
                 {item.label}
               </Box>
             </Button>
@@ -136,7 +164,9 @@ export const Dashboard: React.FC = () => {
 
       <Stack spacing={2} sx={{ width: "100%", maxWidth: 800, mx: "auto" }}>
         {activeWidgets.map((widget) => {
-          const WidgetComponent = React.lazy(widget.component);
+          const WidgetComponent = React.lazy(
+            expandedWidgetId === widget.id ? widget.expanded : widget.compact
+          );
 
           return (
             <Box key={widget.id}>
@@ -156,7 +186,9 @@ export const Dashboard: React.FC = () => {
                   </BaseCard>
                 }
               >
-                <WidgetComponent />
+                <WidgetContext.Provider value={widget.id}>
+                  <WidgetComponent />
+                </WidgetContext.Provider>
               </Suspense>
             </Box>
           );

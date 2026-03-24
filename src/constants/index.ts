@@ -20,8 +20,8 @@ export interface WidgetRegistryEntry {
   id: WidgetId;
   title: string;
   description: string;
-  /** Lazy-loaded component */
-  component: () => Promise<{ default: ComponentType }>;
+  compact: () => Promise<{ default: ComponentType }>;
+  expanded: () => Promise<{ default: ComponentType }>;
 }
 
 /**
@@ -36,19 +36,22 @@ export const WIDGET_REGISTRY: WidgetRegistryEntry[] = [
     id: WIDGET_IDS.BREATHING_TOOL,
     title: 'Breathing Tool',
     description: 'Guided breathing exercises with customizable patterns',
-    component: () => import('@/features/BreathingTool'),
+    compact: () => import('@/features/BreathingTool/CompactView'),
+    expanded: () => import('@/features/BreathingTool/ExpandedView'),
   },
   {
     id: WIDGET_IDS.AMBIENT_NOISE,
     title: 'Ambient Noise',
     description: 'Relaxing ambient soundscapes to help you focus',
-    component: () => import('@/features/AmbientNoise'),
+    compact: () => import('@/features/AmbientNoise/CompactView'),
+    expanded: () => import('@/features/AmbientNoise/ExpandedView'),
   },
   {
     id: WIDGET_IDS.SMART_HYDRATION,
     title: 'Smart Hydration',
     description: 'Personalized hydration tracking with medical-grade calculations',
-    component: () => import('@/features/SmartHydration'),
+    compact: () => import('@/features/SmartHydration/CompactView'),
+    expanded: () => import('@/features/SmartHydration/ExpandedView'),
   },
 ];
 
