@@ -17,11 +17,15 @@ export interface DashboardState {
   /** Per-widget settings keyed by widget ID */
   widgetSettings: Record<string, WidgetSettings>;
 
+  /** ID of the currently expanded widget, or null if none are expanded */
+  expandedWidgetId: string | null;
+
   /* Actions */
   addWidget: (id: string) => void;
   removeWidget: (id: string) => void;
   reorderWidgets: (newOrder: string[]) => void;
   updateWidgetSettings: (id: string, patch: Partial<WidgetSettings>) => void;
+  setExpandedWidget: (id: string | null) => void;
   resetDashboard: () => void;
 }
 
@@ -34,6 +38,7 @@ export const useDashboardStore = create<DashboardState>()(
     (set) => ({
       widgetOrder: DEFAULT_WIDGET_ORDER,
       widgetSettings: DEFAULT_WIDGET_SETTINGS,
+      expandedWidgetId: null,
 
       addWidget: (id: string) =>
         set((state) => {
@@ -63,14 +68,22 @@ export const useDashboardStore = create<DashboardState>()(
           },
         })),
 
+      setExpandedWidget: (id: string | null) =>
+        set({ expandedWidgetId: id }),
+
       resetDashboard: () =>
         set({
           widgetOrder: DEFAULT_WIDGET_ORDER,
           widgetSettings: DEFAULT_WIDGET_SETTINGS,
+          expandedWidgetId: null,
         }),
     }),
     {
       name: 'digi-sanctuary-dashboard',
+      partialize: (state) => ({
+        widgetOrder: state.widgetOrder,
+        widgetSettings: state.widgetSettings,
+      }),
       merge: (persisted, current) => {
         const stored = persisted as DashboardState | undefined;
         if (!stored) return current;

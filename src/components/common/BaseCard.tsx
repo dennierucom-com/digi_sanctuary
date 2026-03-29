@@ -1,5 +1,9 @@
-import React from "react";
-import { Card, CardProps, CardContent, Typography, Box } from "@mui/material";
+import React, { useContext } from "react";
+import { Card, CardProps, CardContent, Typography, Box, IconButton } from "@mui/material";
+import OpenInFullIcon from "@mui/icons-material/OpenInFull";
+import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
+import { useDashboardStore } from "@/store";
+import { WidgetContext } from "@/contexts/WidgetContext";
 
 export interface BaseCardProps extends Omit<CardProps, "title"> {
   title?: React.ReactNode;
@@ -17,8 +21,40 @@ export const BaseCard: React.FC<BaseCardProps> = ({
   sx,
   ...props
 }) => {
+  const widgetId = useContext(WidgetContext);
+  const expandedWidgetId = useDashboardStore((state) => state.expandedWidgetId);
+  const setExpandedWidget = useDashboardStore((state) => state.setExpandedWidget);
+
+  const isExpanded = widgetId !== null && expandedWidgetId === widgetId;
+
+  const handleExpandToggle = () => {
+    if (isExpanded) {
+      setExpandedWidget(null);
+    } else if (widgetId) {
+      setExpandedWidget(widgetId);
+    }
+  };
+
   return (
-    <Card sx={{ p: 2.5, ...sx }} {...props}>
+    <Card
+      sx={{
+        p: 2.5,
+        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        ...(isExpanded && {
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: 1300,
+          borderRadius: 0,
+          overflowY: "auto",
+          m: 0,
+        }),
+        ...sx,
+      }}
+      {...props}
+    >
       {(title || action || icon || description) && (
         <Box
           sx={{
@@ -60,7 +96,18 @@ export const BaseCard: React.FC<BaseCardProps> = ({
               )}
             </Box>
           </Box>
-          {action && <Box sx={{ ml: 2, flexShrink: 0 }}>{action}</Box>}
+            <Box sx={{ display: 'flex', alignItems: 'center', ml: 2, flexShrink: 0, gap: 1 }}>
+              {action}
+              {widgetId && (
+                <IconButton 
+                  onClick={handleExpandToggle} 
+                  sx={{ color: '#4006BC' }}
+                  aria-label={isExpanded ? "Collapse widget" : "Expand widget"}
+                >
+                  {isExpanded ? <CloseFullscreenIcon /> : <OpenInFullIcon />}
+                </IconButton>
+              )}
+            </Box>
         </Box>
       )}
       <CardContent sx={{ p: "0 !important" }}>{children}</CardContent>
