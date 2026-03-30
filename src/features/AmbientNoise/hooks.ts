@@ -25,8 +25,7 @@ export const useAudioPlayer = ({ activeSound, volume, isPlaying }: UseAudioPlaye
       audioRef.current.addEventListener('error', () => setError(true));
     }
 
-    const unmounted = false;
-    audioRef.current.src = SOUND_SOURCES[activeSound] || SOUND_SOURCES.rain;
+    audioRef.current.src = SOUND_SOURCES[activeSound] || SOUND_SOURCES.rain || '';
     audioRef.current.load();
     setIsLoaded(false);
     setError(false);

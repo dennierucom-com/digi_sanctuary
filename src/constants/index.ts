@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+import type { DashboardManifest } from '@/types/manifest';
 
 /* ------------------------------------------------------------------ */
 /*  Widget IDs                                                         */
@@ -87,6 +88,30 @@ export const DEFAULT_WIDGET_SETTINGS: Record<string, Record<string, unknown>> = 
     logs: [],
     lastActiveDate: '',
   },
+};
+
+export const DEFAULT_MANIFEST: DashboardManifest = {
+  version: 1,
+  widgets: [
+    {
+      instanceId: 'breathing-tool-default',
+      type: WIDGET_IDS.BREATHING_TOOL,
+      order: 0,
+      initialProps: DEFAULT_WIDGET_SETTINGS[WIDGET_IDS.BREATHING_TOOL],
+    },
+    {
+      instanceId: 'ambient-noise-default',
+      type: WIDGET_IDS.AMBIENT_NOISE,
+      order: 1,
+      initialProps: DEFAULT_WIDGET_SETTINGS[WIDGET_IDS.AMBIENT_NOISE],
+    },
+    {
+      instanceId: 'smart-hydration-default',
+      type: WIDGET_IDS.SMART_HYDRATION,
+      order: 2,
+      initialProps: DEFAULT_WIDGET_SETTINGS[WIDGET_IDS.SMART_HYDRATION],
+    },
+  ],
 };
 
 /* ------------------------------------------------------------------ */

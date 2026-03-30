@@ -10,7 +10,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/*.png', 'offline.html'],
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,html,svg}'],
+        navigateFallback: '/index.html',
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -36,7 +37,8 @@ export default defineConfig({
         name: 'Digi Sanctuary',
         short_name: 'Sanctuary',
         description: 'A digital sanctuary for mindful disconnection',
-        theme_color: '#C4B5E0',
+        theme_color: '#4006BC',
+        categories: ['health', 'lifestyle'],
         background_color: '#FAF8FF',
         display: 'standalone',
         scope: '/',
@@ -54,6 +56,10 @@ export default defineConfig({
             purpose: 'any maskable',
           },
         ],
+      },
+      devOptions: {
+        enabled: true,
+        type: 'module',
       },
     }),
   ],
