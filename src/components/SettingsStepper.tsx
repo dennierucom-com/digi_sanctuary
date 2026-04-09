@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Stepper, Step, StepLabel, Box, Typography } from "@mui/material";
+import { Stepper, Step, StepLabel, Box } from "@mui/material";
 import { M3Button } from "./common";
 import { APP_STRINGS } from "@/constants";
 

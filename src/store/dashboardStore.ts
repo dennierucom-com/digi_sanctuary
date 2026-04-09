@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { DEFAULT_WIDGET_ORDER, DEFAULT_WIDGET_SETTINGS } from '@/constants';
+import { DEFAULT_WIDGET_SETTINGS, DEFAULT_MANIFEST, WidgetId } from '@/constants';
+import type { DashboardManifest, ManifestWidgetEntry } from '@/types/manifest';
+import { fetchManifest } from './fetchManifest';
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -11,7 +13,10 @@ export interface WidgetSettings {
 }
 
 export interface DashboardState {
-  /** Ordered list of widget IDs currently shown on the dashboard */
+  /** The currently active manifest driving the dashboard layout */
+  activeManifest: DashboardManifest | null;
+
+  /** Derived ordered list of widget IDs for backwards compatibility and ease of use */
   widgetOrder: string[];
 
   /** Per-widget settings keyed by widget ID */
@@ -21,7 +26,8 @@ export interface DashboardState {
   expandedWidgetId: string | null;
 
   /* Actions */
-  addWidget: (id: string) => void;
+  hydrateManifest: () => Promise<void>;
+  addWidget: (id: string, initialProps?: Record<string, unknown>) => void;
   removeWidget: (id: string) => void;
   reorderWidgets: (newOrder: string[]) => void;
   updateWidgetSettings: (id: string, patch: Partial<WidgetSettings>) => void;
@@ -35,30 +41,94 @@ export interface DashboardState {
 
 export const useDashboardStore = create<DashboardState>()(
   persist(
-    (set) => ({
-      widgetOrder: DEFAULT_WIDGET_ORDER,
+    (set, get) => ({
+      activeManifest: null,
+      
+      // Derived getter for backward compatibility or simple array needs
+      get widgetOrder() {
+        const manifest = get().activeManifest;
+        if (!manifest) return [];
+        return [...manifest.widgets].sort((a, b) => a.order - b.order).map(w => w.type);
+      },
+
       widgetSettings: DEFAULT_WIDGET_SETTINGS,
       expandedWidgetId: null,
 
-      addWidget: (id: string) =>
+      hydrateManifest: async () => {
+        try {
+          const manifest = await fetchManifest();
+          set({ activeManifest: manifest });
+        } catch (error) {
+          console.error('Manifest hydration failed, falling back to persisted or default', error);
+          if (!get().activeManifest) {
+            set({ activeManifest: DEFAULT_MANIFEST });
+          }
+        }
+      },
+
+      addWidget: (id: string, initialProps = {}) =>
         set((state) => {
-          if (state.widgetOrder.includes(id)) return state;
+          const manifest = state.activeManifest || DEFAULT_MANIFEST;
+          if (manifest.widgets.some(w => w.type === id)) return state;
+
+          const newOrder = manifest.widgets.length;
+          const newEntry: ManifestWidgetEntry = {
+            instanceId: `${id}-${Date.now()}`,
+            type: id as WidgetId,
+            order: newOrder,
+            initialProps
+          };
+
           return {
-            widgetOrder: [...state.widgetOrder, id],
+            activeManifest: {
+              ...manifest,
+              widgets: [...manifest.widgets, newEntry]
+            },
             widgetSettings: {
               ...state.widgetSettings,
-              [id]: DEFAULT_WIDGET_SETTINGS[id] ?? {},
+              [id]: { ...(DEFAULT_WIDGET_SETTINGS[id] ?? {}), ...initialProps },
             },
           };
         }),
 
       removeWidget: (id: string) =>
-        set((state) => ({
-          widgetOrder: state.widgetOrder.filter((w) => w !== id),
-        })),
+        set((state) => {
+          const manifest = state.activeManifest;
+          if (!manifest) return state;
+
+          const filteredWidgets = manifest.widgets.filter((w) => w.type !== id);
+          const reorderedWidgets = filteredWidgets
+            .sort((a, b) => a.order - b.order)
+            .map((w, idx) => ({ ...w, order: idx }));
+
+          return {
+            activeManifest: {
+              ...manifest,
+              widgets: reorderedWidgets
+            }
+          };
+        }),
 
       reorderWidgets: (newOrder: string[]) =>
-        set({ widgetOrder: newOrder }),
+        set((state) => {
+          const manifest = state.activeManifest;
+          if (!manifest) return state;
+
+          const updatedWidgets = manifest.widgets.map(w => {
+            const index = newOrder.indexOf(w.type);
+            return {
+              ...w,
+              order: index !== -1 ? index : w.order
+            };
+          }).sort((a, b) => a.order - b.order);
+
+          return {
+            activeManifest: {
+              ...manifest,
+              widgets: updatedWidgets
+            }
+          };
+        }),
 
       updateWidgetSettings: (id: string, patch: Partial<WidgetSettings>) =>
         set((state) => ({
@@ -73,7 +143,7 @@ export const useDashboardStore = create<DashboardState>()(
 
       resetDashboard: () =>
         set({
-          widgetOrder: DEFAULT_WIDGET_ORDER,
+          activeManifest: DEFAULT_MANIFEST,
           widgetSettings: DEFAULT_WIDGET_SETTINGS,
           expandedWidgetId: null,
         }),
@@ -81,25 +151,22 @@ export const useDashboardStore = create<DashboardState>()(
     {
       name: 'digi-sanctuary-dashboard',
       partialize: (state) => ({
-        widgetOrder: state.widgetOrder,
+        activeManifest: state.activeManifest,
         widgetSettings: state.widgetSettings,
       }),
       merge: (persisted, current) => {
-        const stored = persisted as DashboardState | undefined;
+        const stored = persisted as Partial<DashboardState> | undefined;
         if (!stored) return current;
 
-        // Inject any newly-registered widget IDs that are missing from the persisted order
-        const missingWidgets = DEFAULT_WIDGET_ORDER.filter(
-          (id) => !stored.widgetOrder.includes(id),
-        );
+        const manifest = stored.activeManifest ?? DEFAULT_MANIFEST;
 
         return {
           ...current,
           ...stored,
-          widgetOrder: [...stored.widgetOrder, ...missingWidgets],
+          activeManifest: manifest,
           widgetSettings: {
             ...DEFAULT_WIDGET_SETTINGS,
-            ...stored.widgetSettings,
+            ...(stored.widgetSettings || {}),
           },
         };
       },

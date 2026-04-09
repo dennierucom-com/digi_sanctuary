@@ -1,0 +1,13 @@
+src/components/SettingsStepper.tsx(2,41): error TS6133: 'Typography' is declared but its value is never read.
+src/features/AmbientNoise/hooks.ts(28,11): error TS6133: 'unmounted' is declared but its value is never read.
+src/features/AmbientNoise/hooks.ts(29,5): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/features/AmbientNoise/StepperConfig.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/features/BreathingTool/hooks.ts(44,29): error TS2532: Object is possibly 'undefined'.
+src/features/BreathingTool/hooks.ts(54,20): error TS2532: Object is possibly 'undefined'.
+src/features/BreathingTool/hooks.ts(56,18): error TS2532: Object is possibly 'undefined'.
+src/features/BreathingTool/StepperConfig.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/features/SmartHydration/StepperConfig.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/main.tsx(5,28): error TS2307: Cannot find module 'virtual:pwa-register' or its corresponding type declarations.
+src/main.tsx(8,7): error TS6133: 'updateSW' is declared but its value is never read.
+src/theme/typography.ts(1,40): error TS2307: Cannot find module '@mui/material/styles/createTypography' or its corresponding type declarations.

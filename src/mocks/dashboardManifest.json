@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "widgets": [
+    {
+      "instanceId": "breathing-tool-1",
+      "type": "breathing-tool",
+      "order": 0,
+      "initialProps": {
+        "pattern": "4-7-8",
+        "speed": 1,
+        "visualStyle": "circle"
+      }
+    },
+    {
+      "instanceId": "ambient-noise-1",
+      "type": "ambient-noise",
+      "order": 1,
+      "initialProps": {
+        "activeSound": "rain",
+        "volume": 0.5
+      }
+    },
+    {
+      "instanceId": "smart-hydration-1",
+      "type": "smart-hydration",
+      "order": 2,
+      "initialProps": {
+        "profile": {
+          "weightKg": 70,
+          "bodyComposition": "average",
+          "enableAltitude": true,
+          "isPregnant": false,
+          "isBreastfeeding": false,
+          "chronicConditions": []
+        },
+        "logs": [],
+        "lastActiveDate": ""
+      }
+    }
+  ]
+}

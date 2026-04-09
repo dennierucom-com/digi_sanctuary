@@ -1,10 +1,8 @@
-import type { TypographyOptions } from '@mui/material/styles/createTypography';
-
 /**
  * M3-inspired type scale using the Outfit font family.
  * Falls back to system fonts for maximum compatibility.
  */
-export const typography: TypographyOptions = {
+export const typography = {
   fontFamily: '"Outfit", "Inter", "Roboto", "Helvetica Neue", Arial, sans-serif',
 
   h1: {

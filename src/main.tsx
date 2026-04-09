@@ -5,7 +5,7 @@ import "./index.css";
 import { registerSW } from "virtual:pwa-register";
 
 // Auto-update service worker polling every 60 minutes
-const updateSW = registerSW({
+registerSW({
   onNeedRefresh() {
     // We could show a prompt here, but vite-plugin-pwa is set to autoUpdate
   },

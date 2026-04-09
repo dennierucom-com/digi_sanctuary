@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -16,13 +16,21 @@ import { useDashboardStore } from "@/store";
 import { WidgetContext } from "@/contexts/WidgetContext";
 import { WIDGET_REGISTRY, APP_STRINGS } from "@/constants";
 import { BaseCard } from "./common";
+import type { ManifestWidgetEntry } from "@/types/manifest";
 
 export const Dashboard: React.FC = () => {
-  const widgetOrder = useDashboardStore((state) => state.widgetOrder);
+  const activeManifest = useDashboardStore((state) => state.activeManifest);
+  const hydrateManifest = useDashboardStore((state) => state.hydrateManifest);
   const expandedWidgetId = useDashboardStore((state) => state.expandedWidgetId);
   const setExpandedWidget = useDashboardStore(
     (state) => state.setExpandedWidget,
   );
+
+  useEffect(() => {
+    if (!activeManifest) {
+      hydrateManifest();
+    }
+  }, [activeManifest, hydrateManifest]);
 
   // Manage body scroll and Escape key logic
   React.useEffect(() => {
@@ -46,10 +54,17 @@ export const Dashboard: React.FC = () => {
   }, [expandedWidgetId, setExpandedWidget]);
 
   // Filter registry based on user's active set
-  const activeWidgets = widgetOrder
-    .map((id) => WIDGET_REGISTRY.find((entry) => entry.id === id))
-    .filter(Boolean) as typeof WIDGET_REGISTRY;
-
+  const activeWidgets = activeManifest
+    ? [...activeManifest.widgets]
+        .sort((a, b) => a.order - b.order)
+        .map((entry) => {
+          const widgetDef = WIDGET_REGISTRY.find((w) => w.id === entry.type);
+          return widgetDef ? { entry, widgetDef } : null;
+        })
+        .filter(
+          (item): item is { entry: ManifestWidgetEntry; widgetDef: typeof WIDGET_REGISTRY[number] } => Boolean(item)
+        )
+    : [];
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>
       <Box
@@ -163,13 +178,13 @@ export const Dashboard: React.FC = () => {
       </Typography>
 
       <Stack spacing={2} sx={{ width: "100%", maxWidth: 800, mx: "auto" }}>
-        {activeWidgets.map((widget) => {
+        {activeWidgets.map(({ entry, widgetDef }) => {
           const WidgetComponent = React.lazy(
-            expandedWidgetId === widget.id ? widget.expanded : widget.compact
+            expandedWidgetId === entry.type ? widgetDef.expanded : widgetDef.compact
           );
 
           return (
-            <Box key={widget.id}>
+            <Box key={entry.instanceId}>
               <Suspense
                 fallback={
                   <BaseCard
@@ -181,13 +196,13 @@ export const Dashboard: React.FC = () => {
                     }}
                   >
                     <Typography color="text.secondary">
-                      Loading {widget.title}...
+                      Loading {widgetDef.title}...
                     </Typography>
                   </BaseCard>
                 }
               >
-                <WidgetContext.Provider value={widget.id}>
-                  <WidgetComponent />
+                <WidgetContext.Provider value={entry.type}>
+                  <WidgetComponent {...(entry.initialProps || {})} />
                 </WidgetContext.Provider>
               </Suspense>
             </Box>

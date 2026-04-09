@@ -41,7 +41,7 @@ export const useBreathingCycle = ({ pattern, speedMultiplier = 1, isActive }: Us
     let currentStepIndex = sequence.findIndex((s) => s.p === phase);
     if (currentStepIndex === -1) currentStepIndex = 0;
 
-    const currentDuration = sequence[currentStepIndex].d;
+    const currentDuration = sequence[currentStepIndex]!.d;
     const tickMs = 100 / speedMultiplier; // 10 updates per second adjusted by speed
 
     const timer = setInterval(() => {
@@ -51,9 +51,9 @@ export const useBreathingCycle = ({ pattern, speedMultiplier = 1, isActive }: Us
         if (newTime <= 0) {
           // Move to next phase
           const nextIndex = (currentStepIndex + 1) % sequence.length;
-          setPhase(sequence[nextIndex].p);
+          setPhase(sequence[nextIndex]!.p);
           setProgress(0);
-          return sequence[nextIndex].d;
+          return sequence[nextIndex]!.d;
         }
         
         // Calculate progress
